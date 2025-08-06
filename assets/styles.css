@@ -182,7 +182,23 @@ body {
 .bar {
   transition: background-color 0.3s ease, height 0.3s ease;
   flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
 }
+.bar-value {
+  padding-top: 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+/* Override untuk mode gelap agar teks terlihat di atas balok berwarna terang */
+body.dark-mode .bar-value {
+  color: #1f2937; /* Teks gelap untuk kontras tinggi */
+}
+
 .bar-primary {
   background-color: #d1d5db;
 }

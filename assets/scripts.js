@@ -46,10 +46,20 @@ function generateArray() {
 
 function drawBars(currentArray, indices = {}) {
   visualizer.innerHTML = "";
+  const showValues = currentArray.length < 50;
+
   for (let i = 0; i < currentArray.length; i++) {
     const bar = document.createElement("div");
     bar.style.height = `${currentArray[i]}%`;
     bar.classList.add("bar");
+
+    // Add value on top of the bar if array size is small enough
+    if (showValues) {
+      const barValue = document.createElement("span");
+      barValue.classList.add("bar-value");
+      barValue.textContent = currentArray[i];
+      bar.appendChild(barValue);
+    }
 
     if (indices.sorted && i >= indices.sorted) {
       bar.classList.add(SORTED_COLOR);
@@ -255,6 +265,7 @@ function initializeTheme() {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
     setDarkMode(prefersDark);
+    prefersDark ? (themeToggle.checked = true) : (themeToggle.checked = false);
   }
 }
 
