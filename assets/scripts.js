@@ -41,7 +41,8 @@ function generateArray() {
   }
   drawBars(array);
   status.textContent = 'Array baru telah dibuat. Tekan "Mulai Urutkan".';
-  sortBtn.disabled = false;
+  // Ensure controls are set for a fresh start
+  toggleMainControls(true);
 }
 
 function drawBars(currentArray, indices = {}) {
@@ -61,7 +62,9 @@ function drawBars(currentArray, indices = {}) {
       bar.appendChild(barValue);
     }
 
-    if (indices.sorted && i >= indices.sorted) {
+    // Use hasOwnProperty to correctly check for the 'sorted' property,
+    // even when its value is 0 (which is falsy in JS).
+    if (indices.hasOwnProperty("sorted") && i >= indices.sorted) {
       bar.classList.add(SORTED_COLOR);
     } else if (
       indices.swap &&
@@ -207,16 +210,26 @@ function handleStop() {
   isSorting = false;
   isPaused = false;
   sortHistory = [];
-  currentStep = -1;
-  generateArray();
+  currentStep = -1;  generateArray();
   toggleMainControls(true);
 }
 
 function finishSorting() {
   isSorting = false;
-  isPaused = false;
-  toggleMainControls(true);
+  // Sorting is finished, set to paused to enable step-by-step review
+  isPaused = true;
+  setFinishedControls();
 }
+
+function setFinishedControls() {
+  generateBtn.disabled = false;
+  sortBtn.disabled = true; // Cannot re-sort a completed array
+  sizeSlider.disabled = false;
+  playPauseBtn.disabled = true; // Cannot play/pause a finished sort
+  stopBtn.disabled = false; // Can always stop
+  updateStepButtons(); // This will correctly enable prev/next
+}
+
 
 function toggleMainControls(enabled) {
   generateBtn.disabled = !enabled;
