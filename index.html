@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualisasi Algoritma Bubble Sort</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        if (
+          savedTheme === "dark" ||
+          (!savedTheme &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark-mode");
+          // In this case, we apply it to the body as our CSS targets the body tag
+          document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("dark-mode");
+          });
+        }
+      })();
+    </script>
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="themeToggle">
+          <input type="checkbox" id="themeToggle" />
+          <div class="slider round">
+            <svg
+              class="sun"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 12a5 5 0 1 1 10 0a5 5 0 0 1-10 0zm-2 0a7 7 0 1 0 14 0a7 7 0 0 0-14 0zm12-9v1a1 1 0 0 1-2 0v-1a1 1 0 0 1 2 0zM5 4v1a1 1 0 0 1-2 0v-1a1 1 0 0 1 2 0zm13.66 1.34l-.71.71a1 1 0 0 1-1.42-1.42l.71-.71a1 1 0 0 1 1.42 1.42zm-12.02 12.02l-.71.71a1 1 0 0 1-1.42-1.42l.71-.71a1 1 0 0 1 1.42 1.42zM12 19a1 1 0 0 1-1 1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm0-14a1 1 0 0 1-1 1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1-1zm5.66 13.66l.71-.71a1 1 0 0 1 0-1.42l-.71-.71a1 1 0 0 1 1.42 1.42l.71.71zm-12.02-12.02l.71-.71a1 1 0 0 1 0-1.42l-.71-.71a1 1 0 0 1 1.42 1.42l.71.71z"
+              />
+            </svg>
+            <svg
+              class="moon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12.15 4.04c-5.06 0-9.17 4.11-9.17 9.17 0 3.83 2.4 7.11 5.81 8.52.08.03.17.04.25.04a.753.753 0 0 0 .74-.64 6.37 6.37 0 0 1-1.5-3.74c0-3.5 2.85-6.35 6.35-6.35 3.34 0 6.09 2.68 6.34 6.01.03.34.31.6.65.6.34 0 .61-.26.64-.6 0-3.42-2.78-6.2-6.2-6.2a.75.75 0 0 0-.52.22.75.75 0 0 0-.23.53z"
+              />
+            </svg>
+          </div>
+        </label>
+      </div>
+
+      <div class="header">
+        <h1>Visualisasi Bubble Sort</h1>
+        <p>Perhatikan bagaimana elemen "menggelembung" ke posisi yang benar.</p>
+      </div>
+
+      <!-- Kontrol -->
+      <div class="controls">
+        <div class="control-group">
+          <label for="sizeSlider"
+            >Ukuran Array: <span id="sizeValue">10</span></label
+          >
+          <input type="range" id="sizeSlider" min="10" max="100" value="10" />
+        </div>
+        <div class="control-group">
+          <label for="speedSlider"
+            >Kecepatan Animasi: <span id="speedValue">200</span> ms</label
+          >
+          <input type="range" id="speedSlider" min="5" max="200" value="200" />
+        </div>
+        <div class="control-buttons">
+          <div class="button-row">
+            <button id="generateBtn" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-4.518a.75.75 0 000 1.5h6a.75.75 0 00.75-.75V4.518a.75.75 0 00-1.5 0v2.253a9 9 0 00-15.06 4.042.75.75 0 001.5 0zm14.495 3.89a7.5 7.5 0 01-12.548 3.364l-1.903-1.903h4.518a.75.75 0 000-1.5h-6a.75.75 0 00-.75.75v4.518a.75.75 0 001.5 0v-2.253a9 9 0 0015.06-4.042.75.75 0 00-1.5 0z" clip-rule="evenodd" />
+              </svg>
+              <span>Buat Array Baru</span>
+            </button>
+            <button id="sortBtn" class="btn btn-success">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.647c1.295.742 1.295 2.545 0 3.286L7.279 20.99c-1.25.717-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+              </svg>
+              <span>Mulai Urutkan</span>
+            </button>
+            <button id="stopBtn" class="btn btn-danger" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.5 7.5a3 3 0 013-3h9a3 3 0 013 3v9a3 3 0 01-3 3h-9a3 3 0 01-3-3v-9z" clip-rule="evenodd" />
+              </svg>
+              <span>Stop</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualizer -->
+      <div id="visualizer" class="bar-container"></div>
+
+      <!-- Status -->
+      <div id="status" class="status">
+        Tekan "Buat Array Baru" untuk memulai.
+      </div>
+
+      <!-- Animation Controls -->
+      <div class="animation-controls">
+        <div class="button-row">
+          <button id="playPauseBtn" class="btn btn-info" disabled>
+            <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 00-1.5 0v13.5a.75.75 0 001.5 0V5.25zm7.5 0a.75.75 0 00-1.5 0v13.5a.75.75 0 001.5 0V5.25z" clip-rule="evenodd" />
+            </svg>
+            <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+              <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.647c1.295.742 1.295 2.545 0 3.286L7.279 20.99c-1.25.717-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+            </svg>
+            <span id="playPauseText">Pause</span>
+          </button>
+          <button id="prevBtn" class="btn btn-secondary" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M13.28 3.97a.75.75 0 010 1.06L6.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0zm6 0a.75.75 0 010 1.06L12.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z" clip-rule="evenodd" />
+            </svg>
+            <span>Sebelumnya</span>
+          </button>
+          <button id="nextBtn" class="btn btn-secondary" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.72 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 010-1.06zm-6 0a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 010-1.06z" clip-rule="evenodd" />
+            </svg>
+            <span>Berikutnya</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- History Log Section -->
+      <div class="history-container">
+        <h3>Log Histori Langkah:</h3>
+        <div id="historyLog"></div>
+      </div>
+    </div>
+
+    <script src="./assets/scripts.js"></script>
+  </body>
+</html>
